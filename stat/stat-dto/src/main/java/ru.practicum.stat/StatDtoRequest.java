@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Builder
 @Getter
@@ -16,5 +17,5 @@ public class StatDtoRequest {
     String ip;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    LocalDateTime timestamp;
+    OffsetDateTime timestamp;
 }
