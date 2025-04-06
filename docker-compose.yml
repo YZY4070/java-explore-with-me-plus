@@ -1,8 +1,8 @@
 services:
   main-service:
     build: main-service
-    image: ewm-main-service
-    container_name: ewm-main-service
+    image: main-service
+    container_name: main-service
     ports:
       - "8080:8080"
     depends_on:
@@ -13,17 +13,17 @@ services:
       - SPRING_DATASOURCE_USERNAME=dbuser
       - SPRING_DATASOURCE_PASSWORD=12345
 
-  stat-server:
+  stats-server:
     build: stat
-    image: ewm-stat-server
-    container_name: ewm-stat-server
+    image: stats-server
+    container_name: stats-server
     ports:
       - "9090:9090"
     depends_on:
-      stat-db:
+      stats-db:
         condition: service_healthy
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://stat-db:5432/statdb
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5432/statsdb
       - SPRING_DATASOURCE_USERNAME=dbuser
       - SPRING_DATASOURCE_PASSWORD=12345
 
@@ -42,15 +42,15 @@ services:
       interval: 5s
       retries: 10
 
-  stat-db:
+  stats-db:
     image: postgres:14-alpine
-    container_name: stat-db
+    container_name: stats-db
     ports:
       - "5432:5432"
     volumes:
-      - ./stat/stat-server/src/main/resources/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+      - ./stat/stats-server/src/main/resources/schema.sql:/docker-entrypoint-initdb.d/schema.sql
     environment:
-      - POSTGRES_DB=statdb
+      - POSTGRES_DB=statsdb
       - POSTGRES_USER=dbuser
       - POSTGRES_PASSWORD=12345
     healthcheck:
