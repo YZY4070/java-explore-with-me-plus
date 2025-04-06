@@ -12,7 +12,7 @@
 
 	<name>Explore With Me</name>
     <modules>
-        <module>main-service</module>
+        <module>service</module>
         <module>stat</module>
     </modules>
 
@@ -60,6 +60,7 @@
 						<dependency>
 							<groupId>com.puppycrawl.tools</groupId>
 							<artifactId>checkstyle</artifactId>
+							<version>10.3</version>
 						</dependency>
 					</dependencies>
 				</plugin>
