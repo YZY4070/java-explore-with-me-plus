@@ -3,8 +3,12 @@ package ru.practicum.stat.service;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.persistence.EntityManager;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.stat.GetStatRequest;
 import ru.practicum.stat.StatDtoRequest;
 import ru.practicum.stat.StatDtoResponse;
@@ -16,17 +20,21 @@ import ru.practicum.stat.repository.StatRepository;
 import java.util.List;
 
 @Service
+@Transactional(readOnly = true)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class StatServiceImpl implements StatService {
-    StatRepository statRepository;
-    @Autowired
-    private JPAQueryFactory jpaQueryFactory;
+    final StatRepository statRepository;
+    final EntityManager entityManager;
 
     @Autowired
-    public StatServiceImpl(StatRepository statRepository) {
+    public StatServiceImpl(StatRepository statRepository,
+                           EntityManager entityManager) {
         this.statRepository = statRepository;
+        this.entityManager = entityManager;
     }
 
     @Override
+    @Transactional
     public void saveHit(StatDtoRequest request) {
         Stat stat = StatMapper.INSTANCE.mapToStat(request);
         statRepository.save(stat);
@@ -34,9 +42,10 @@ public class StatServiceImpl implements StatService {
 
     @Override
     public List<StatDtoResponse> findStats(GetStatRequest request) {
+        JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
         QStat stat = QStat.stat;
 
-        JPAQuery<StatDtoResponse> query = jpaQueryFactory
+        JPAQuery<StatDtoResponse> query = queryFactory
                 .select(
                         Projections.constructor(StatDtoResponse.class,
                                 stat.app,
