@@ -50,7 +50,8 @@ public class StatsClient {
         return restClient.get()
                 .uri(uriBuilder.toString(), buildUriVariables(request))
                 .retrieve()
-                .body(new ParameterizedTypeReference<List<StatsDtoResponse>>() {});
+                .body(new ParameterizedTypeReference<List<StatsDtoResponse>>() {
+                });
     }
 
     private Object[] buildUriVariables(GetStatsRequest request) {
