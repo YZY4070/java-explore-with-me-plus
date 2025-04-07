@@ -5,6 +5,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,21 +23,16 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@RequiredArgsConstructor
 public class StatsServiceImpl implements StatsService {
     final StatsRepository statsRepository;
     final EntityManager entityManager;
-
-    @Autowired
-    public StatsServiceImpl(StatsRepository statsRepository,
-                            EntityManager entityManager) {
-        this.statsRepository = statsRepository;
-        this.entityManager = entityManager;
-    }
+    final StatsMapper statsMapper;
 
     @Override
     @Transactional
     public void saveHit(StatsDtoRequest request) {
-        Stats stats = StatsMapper.INSTANCE.mapToStat(request);
+        Stats stats = statsMapper.mapToStat(request);
         statsRepository.save(stats);
     }
 
