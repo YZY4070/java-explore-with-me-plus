@@ -30,7 +30,9 @@ public class StatsClientTest {
 
         try {
             assertNotNull(request);
+            // statsClient.saveHit(request);
         } catch (Exception e) {
+            System.out.println("Ожидаемая ошибка при тестировании: " + e.getMessage());
         }
     }
 
