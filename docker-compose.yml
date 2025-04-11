@@ -17,7 +17,7 @@ services:
     image: postgres:16.1
     container_name: ewm-db
     ports:
-      - "5433:5433"
+      - "6433:5433"
     environment:
       - POSTGRES_DB=ewmdb
       - POSTGRES_USER=mainDb
