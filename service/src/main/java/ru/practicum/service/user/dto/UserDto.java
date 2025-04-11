@@ -1,0 +1,25 @@
+package ru.practicum.service.user.dto;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Data;
+import lombok.experimental.FieldNameConstants;
+
+@Data
+@Builder
+@FieldNameConstants(level = AccessLevel.PRIVATE)
+public class UserDto {
+    Long id;
+
+    @Size(min = 2, max = 255)
+    @NotBlank
+    String name;
+
+    @Email
+    @NotBlank
+    @Size(min = 6, max = 255)
+    String email;
+}
