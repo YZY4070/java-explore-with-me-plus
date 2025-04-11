@@ -15,7 +15,7 @@ import java.util.Collection;
 @RequiredArgsConstructor
 @RequestMapping(path = "/admin/users")
 public class UserController {
-    UserService userService;
+    private final UserService userService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
