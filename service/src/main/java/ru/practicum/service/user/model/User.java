@@ -1,4 +1,4 @@
-package ru.practicum.service.user;
+package ru.practicum.service.user.model;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -22,6 +22,4 @@ public class User {
 
     @Column(nullable = false, unique = true, length = 255)
     String email;
-
-
 }

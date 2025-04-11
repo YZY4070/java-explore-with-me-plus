@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.service.event.Event;
-import ru.practicum.service.user.User;
+import ru.practicum.service.user.model.User;
 
 import java.time.LocalDateTime;
 
@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "requests", schema = "public")
-@EqualsAndHashCode(of = { "event", "requester" })
+@EqualsAndHashCode(of = {"event", "requester"})
 @Getter
 @Setter
 @ToString
