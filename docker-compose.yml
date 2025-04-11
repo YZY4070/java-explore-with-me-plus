@@ -8,6 +8,7 @@ services:
       - POSTGRES_DB=ewmdb
       - POSTGRES_USER=mainDb
       - POSTGRES_PASSWORD=mainDb
+    command: ["postgres", "-c", "port=5433"]
     healthcheck:
       test: pg_isready -q -d $$POSTGRES_DB -U $$POSTGRES_USER
       timeout: 5s
