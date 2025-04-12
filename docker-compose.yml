@@ -24,7 +24,7 @@ services:
       ewm-db:
         condition: service_healthy
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5433/ewmdb
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/ewmdb
       - SPRING_DATASOURCE_USERNAME=mainDb
       - SPRING_DATASOURCE_PASSWORD=mainDb
 
