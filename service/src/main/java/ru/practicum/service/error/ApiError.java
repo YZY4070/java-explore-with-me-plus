@@ -1,4 +1,4 @@
-package ru.practicum.service.exception;
+package ru.practicum.service.error;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
@@ -6,14 +6,14 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class ErrorResponse {
+public class ApiError {
     String status;
     String description;
     String message;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     LocalDateTime timestamp;
 
-    public ErrorResponse(String status, String description, String message) {
+    public ApiError(String status, String description, String message) {
         this.status = status;
         this.description = description;
         this.message = message;

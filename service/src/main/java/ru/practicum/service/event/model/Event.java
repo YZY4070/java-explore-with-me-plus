@@ -1,9 +1,12 @@
-package ru.practicum.service.event;
+package ru.practicum.service.event.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.service.category.model.Category;
+import ru.practicum.service.event.dto.EventState;
 import ru.practicum.service.user.model.User;
 
 import java.time.LocalDateTime;
@@ -37,6 +40,7 @@ public class Event {
     Category category;
 
     @Column(name = "event_date", nullable = false)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     LocalDateTime eventDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -64,9 +68,11 @@ public class Event {
 
     @Column(nullable = false, length = 10)
     @Enumerated(EnumType.STRING)
-    State state;
+    EventState state;
 
     @Column(name = "published_on")
     LocalDateTime publishedOn;
 
+    @Transient
+    Long views;
 }

@@ -1,4 +1,4 @@
-package ru.practicum.service.exception;
+package ru.practicum.service.error;
 
 
 import org.springframework.dao.DataIntegrityViolationException;
@@ -8,38 +8,42 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import ru.practicum.service.exception.ConflictException;
+import ru.practicum.service.exception.ForbiddenException;
+import ru.practicum.service.exception.NotFoundException;
+import ru.practicum.service.exception.ValidationException;
 
 @RestControllerAdvice
 public class ErrorHandler {
 
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleNotFound(final NotFoundException e) {
-        return new ErrorResponse("NOT_FOUND", "The required object was not found.", e.getMessage());
+    public ApiError handleNotFound(final NotFoundException e) {
+        return new ApiError("NOT_FOUND", "The required object was not found.", e.getMessage());
     }
 
     @ExceptionHandler({ConflictException.class, DataIntegrityViolationException.class})
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handleConflict(RuntimeException e) {
-        return new ErrorResponse("CONFLICT", "Integrity constraint has been violated.", e.getMessage());
+    public ApiError handleConflict(RuntimeException e) {
+        return new ApiError("CONFLICT", "Integrity constraint has been violated.", e.getMessage());
     }
 
     @ExceptionHandler(ValidationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleValidation(ValidationException e) {
-        return new ErrorResponse("BAD_REQUEST", "Incorrectly made request.", e.getMessage());
+    public ApiError handleValidation(ValidationException e) {
+        return new ApiError("BAD_REQUEST", "Incorrectly made request.", e.getMessage());
     }
 
     @ExceptionHandler(ForbiddenException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handleForbidden(ForbiddenException e) {
-        return new ErrorResponse("FORBIDDEN", "For the requested operation the conditions are not met.",
+    public ApiError handleForbidden(ForbiddenException e) {
+        return new ApiError("FORBIDDEN", "For the requested operation the conditions are not met.",
                 e.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleMethodArgumentNotValid(MethodArgumentNotValidException e) {
+    public ApiError handleMethodArgumentNotValid(MethodArgumentNotValidException e) {
         String errorMessage = e.getBindingResult().getAllErrors().stream() //извлекаем список всех ошибок
                 .map(error -> {
                     String field = ((FieldError) error).getField(); //получаем имя поля, которое не прошло валидацию
@@ -50,7 +54,7 @@ public class ErrorHandler {
                 .findFirst()//из всего потока берем первое (если оно есть)
                 .orElse("Validation failed without specific error message."); //если по какой-то причине нет подробностей возвращаем дефолтное сообщение
 
-        return new ErrorResponse("BAD_REQUEST", "Incorrectly made request.", errorMessage); //возвращаем объект с информацией об ошибке
+        return new ApiError("BAD_REQUEST", "Incorrectly made request.", errorMessage); //возвращаем объект с информацией об ошибке
     }
 
 }

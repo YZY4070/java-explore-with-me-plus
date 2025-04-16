@@ -1,4 +1,4 @@
-package ru.practicum.service.event;
+package ru.practicum.service.event.model;
 
 import jakarta.persistence.*;
 import lombok.*;

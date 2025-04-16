@@ -3,7 +3,7 @@ package ru.practicum.service.compilation;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.service.event.Event;
+import ru.practicum.service.event.model.Event;
 
 import java.util.HashSet;
 import java.util.Set;
