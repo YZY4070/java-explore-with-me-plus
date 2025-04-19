@@ -16,7 +16,6 @@ import ru.practicum.service.event.dto.*;
 import ru.practicum.service.event.mapper.EventMapper;
 import ru.practicum.service.event.repository.EventRepository;
 import ru.practicum.service.event.repository.LocationRepository;
-import ru.practicum.service.exception.ConflictException;
 import ru.practicum.service.exception.ForbiddenException;
 import ru.practicum.service.exception.NotFoundException;
 import ru.practicum.service.exception.ValidationException;

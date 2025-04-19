@@ -6,7 +6,6 @@ import ru.practicum.service.category.mapper.CategoryMapper;
 import ru.practicum.service.category.model.Category;
 import ru.practicum.service.event.Event;
 import ru.practicum.service.event.Location;
-import ru.practicum.service.event.State;
 import ru.practicum.service.event.dto.*;
 import ru.practicum.service.user.mapper.UserMapper;
 import ru.practicum.service.user.model.User;
