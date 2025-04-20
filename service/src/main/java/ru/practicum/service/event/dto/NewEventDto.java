@@ -27,9 +27,11 @@ public class NewEventDto {
     private String description;
 
     @NotNull
+    @PositiveOrZero
     private Long category;
 
     @NotNull
+    @Future
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime eventDate;
 
@@ -40,6 +42,7 @@ public class NewEventDto {
     private Boolean paid = false;
 
     @Builder.Default
+    @PositiveOrZero
     private Integer participantLimit = 0;
 
     @Builder.Default

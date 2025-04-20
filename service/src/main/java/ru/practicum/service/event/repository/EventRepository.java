@@ -54,7 +54,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             @Param("onlyAvailable") Boolean onlyAvailable,
             Pageable pageable);
 
-    List<Event> findAllByIdIn(Collection<Long> eventIds);
+    Set<Event> findAllByIdIn(Collection<Long> eventIds);
 
     @Query("SELECT DISTINCT e FROM Event e " +
             "JOIN FETCH e.category " +

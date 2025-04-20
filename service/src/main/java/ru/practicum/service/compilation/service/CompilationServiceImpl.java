@@ -13,6 +13,7 @@ import ru.practicum.service.compilation.dto.UpdateCompilationRequest;
 import ru.practicum.service.compilation.mapper.CompilationMapper;
 import ru.practicum.service.compilation.repository.CompilationRepository;
 import ru.practicum.service.event.Event;
+import ru.practicum.service.event.mapper.EventMapper;
 import ru.practicum.service.event.repository.EventRepository;
 import ru.practicum.service.exception.NotFoundException;
 
@@ -50,8 +51,11 @@ public class CompilationServiceImpl implements CompilationService {
     public CompilationDto createCompilation(NewCompilationDto newCompilationDto) {
         Compilation compilation = compilationMapper.toCompilation(newCompilationDto);
 
+        // !!!
+        // Здесь необходимо заполнить поле views у event из статистики
+        // !!!
         if (newCompilationDto.getEvents() != null && !newCompilationDto.getEvents().isEmpty()) {
-            Set<Event> events = new HashSet<>(eventRepository.findAllByIdIn(newCompilationDto.getEvents()));
+            Set<Event> events = eventRepository.findAllByIdIn(newCompilationDto.getEvents());
             compilation.setEvents(events);
         } else {
             compilation.setEvents(new HashSet<>());

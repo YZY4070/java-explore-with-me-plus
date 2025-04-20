@@ -27,9 +27,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryResponseDto createCategory(CategoryRequestDto categoryRequestDto) {
-        if (categoryRepository.existsByName(categoryRequestDto.getName())) {
-            throw new ConflictException("Category already exists:" + categoryRequestDto.getName());
-        }
+//        if (categoryRepository.existsByName(categoryRequestDto.getName())) {
+//            throw new ConflictException("Category already exists:" + categoryRequestDto.getName());
+//        }
         return categoryMapper.toCategoryResponseDto(categoryRepository.save(categoryMapper.toCategory(categoryRequestDto)));
     }
 
@@ -37,9 +37,9 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryResponseDto updateCategory(Long id, CategoryRequestDto categoryRequestDto) {
         Category category = categoryRepository.findById(id).orElseThrow(() -> new NotFoundException("Category not found: " + id));
         Optional<Category> optionalCategory = categoryRepository.findByName(categoryRequestDto.getName());
-        if (optionalCategory.isPresent() && !optionalCategory.get().getId().equals(id)) {
-            throw new ConflictException("This name in categories already exist:" + categoryRequestDto.getName());
-        }
+//        if (optionalCategory.isPresent() && !optionalCategory.get().getId().equals(id)) {
+//            throw new ConflictException("This name in categories already exist:" + categoryRequestDto.getName());
+//        }
         category.setName(categoryRequestDto.getName());
         return categoryMapper.toCategoryResponseDto(categoryRepository.save(category));
     }

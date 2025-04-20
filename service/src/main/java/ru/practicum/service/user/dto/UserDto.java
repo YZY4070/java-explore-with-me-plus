@@ -14,12 +14,12 @@ import lombok.experimental.FieldNameConstants;
 public class UserDto {
     Long id;
 
-    @Size(min = 2, max = 255)
+    @Size(min = 2, max = 250)
     @NotBlank
     String name;
 
     @Email
     @NotBlank
-    @Size(min = 6, max = 255)
+    @Size(min = 6, max = 254)
     String email;
 }
