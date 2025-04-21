@@ -13,7 +13,6 @@ import ru.practicum.service.compilation.dto.UpdateCompilationRequest;
 import ru.practicum.service.compilation.mapper.CompilationMapper;
 import ru.practicum.service.compilation.repository.CompilationRepository;
 import ru.practicum.service.event.Event;
-import ru.practicum.service.event.mapper.EventMapper;
 import ru.practicum.service.event.repository.EventRepository;
 import ru.practicum.service.exception.NotFoundException;
 

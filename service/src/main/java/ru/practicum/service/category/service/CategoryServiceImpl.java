@@ -11,7 +11,6 @@ import ru.practicum.service.category.dto.CategoryResponseDto;
 import ru.practicum.service.category.mapper.CategoryMapper;
 import ru.practicum.service.category.model.Category;
 import ru.practicum.service.category.repository.CategoryRepository;
-import ru.practicum.service.exception.ConflictException;
 import ru.practicum.service.exception.NotFoundException;
 
 import java.util.Collection;
