@@ -48,9 +48,6 @@ public class EventController {
     }
 
 
-
-
-
     @GetMapping("/{id}")
     public EventFullDto getEvent(@PathVariable Long id, HttpServletRequest request) {
         log.info("Получен запрос GET /events/{}", id);
