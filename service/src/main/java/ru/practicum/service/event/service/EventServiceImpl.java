@@ -1,7 +1,12 @@
 package ru.practicum.service.event.service;
 
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.persistence.EntityManager;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -11,6 +16,7 @@ import ru.practicum.service.category.model.Category;
 import ru.practicum.service.category.repository.CategoryRepository;
 import ru.practicum.service.event.Event;
 import ru.practicum.service.event.Location;
+import ru.practicum.service.event.QEvent;
 import ru.practicum.service.event.State;
 import ru.practicum.service.event.dto.*;
 import ru.practicum.service.event.mapper.EventMapper;
@@ -26,7 +32,6 @@ import ru.practicum.service.stats.client.StatsClient;
 import ru.practicum.service.user.model.User;
 import ru.practicum.service.user.repository.UserRepository;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -35,30 +40,23 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class EventServiceImpl implements EventService {
+    private static final String APP_NAME = "explore-with-me";
     private final EventRepository eventRepository;
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
     private final LocationRepository locationRepository;
     private final EventMapper eventMapper;
     private final StatsClient statsClient;
+    private final EntityManager entityManager;
 
-    private static final String APP_NAME = "explore-with-me";
 
     @Override
     @Transactional(readOnly = true)
     public Collection<EventShortDto> getEvents(String text, List<Long> categories, Boolean paid,
                                                LocalDateTime rangeStart, LocalDateTime rangeEnd,
                                                Boolean onlyAvailable, String sort, Integer from, Integer size) {
-        // Валидация времени: если диапазон не задан, то устанавливаем поиск от текущего момента
-        LocalDateTime now = LocalDateTime.now();
-        if (rangeStart == null) {
-            rangeStart = now;
-        }
-
-        // Проверка валидности временного диапазона
-        if (rangeStart != null && rangeEnd != null && rangeEnd.isBefore(rangeStart)) {
-            throw new ValidationException("Дата окончания не может быть раньше даты начала");
-        }
+        JPAQueryFactory jpaQueryFactory = new JPAQueryFactory(entityManager);
+        QEvent event = QEvent.event;
 
         Pageable pageable;
         if (sort != null && sort.equals("EVENT_DATE")) {
@@ -67,27 +65,58 @@ public class EventServiceImpl implements EventService {
             pageable = PageRequest.of(from / size, size);
         }
 
-        // Получаем события из базы данных
-        var events = eventRepository.findAllPublic(
-                text, categories, paid, rangeStart, rangeEnd, onlyAvailable, pageable);
+        BooleanBuilder booleanBuilder = new BooleanBuilder(event.state.eq(State.PUBLISHED));
 
-        // Собираем список URI для статистики и получаем статистику просмотров
-        List<String> uris = events.stream()
-                .map(event -> "/events/" + event.getId())
+        if (text != null && !text.trim().isEmpty()) {
+            booleanBuilder.or(event.annotation.containsIgnoreCase(text)).or(event.description.containsIgnoreCase(text));
+        }
+
+        if (categories != null && !categories.isEmpty()) {
+            booleanBuilder.and(event.category.id.in(categories));
+        }
+
+        if (paid != null) {
+            booleanBuilder.and(event.paid.eq(paid));
+        }
+
+        if (rangeStart == null) {
+            rangeStart = LocalDateTime.now();
+        }
+
+        if (rangeEnd != null && rangeEnd.isBefore(rangeStart)) {
+            throw new ValidationException("Дата окончания не может быть раньше даты начала");
+        }
+        booleanBuilder.and(event.eventDate.goe(rangeStart));
+
+        if (rangeEnd != null) {
+            booleanBuilder.and(event.eventDate.loe(rangeEnd));
+        }
+
+        if (Boolean.TRUE.equals(onlyAvailable)) {
+            booleanBuilder.and(event.participantLimit.eq(0).or(event.confirmedRequests.lt(event.participantLimit)));
+        }
+
+        long totalCount = jpaQueryFactory.selectFrom(event)
+                .where(booleanBuilder)
+                .fetchCount();
+
+        List<Event> events = jpaQueryFactory.selectFrom(event)
+                .where(booleanBuilder)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        PageImpl<Event> page = new PageImpl<>(events, pageable, totalCount);
+
+        List<String> uris = page.stream()
+                .map(e -> "/events/" + e.getId())
                 .collect(Collectors.toList());
 
         Map<Long, Long> viewStats = getViewStats(uris);
 
-        // Если сортировка по просмотрам, то сортируем вручную
-        List<EventShortDto> result = events.stream()
-                .map(event -> eventMapper.toEventShortDto(event, viewStats.getOrDefault(event.getId(), 0L)))
+        return events.stream()
+                .map(e -> eventMapper.toEventShortDto(e, viewStats.getOrDefault(e.getId(), 0L)))
                 .collect(Collectors.toList());
-
-        if (sort != null && sort.equals("VIEWS")) {
-            result.sort(Comparator.comparingLong(EventShortDto::getViews).reversed());
-        }
-
-        return result;
     }
 
     @Override
