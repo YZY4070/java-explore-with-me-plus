@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.service.stats.GetStatsRequest;
 import ru.practicum.service.stats.StatsDtoRequest;
 import ru.practicum.service.stats.StatsDtoResponse;
+import ru.practicum.service.stats.exception.BadRequestException;
 import ru.practicum.service.stats.mapper.StatsMapper;
 import ru.practicum.service.stats.model.QStats;
 import ru.practicum.service.stats.model.Stats;
@@ -39,6 +40,10 @@ public class StatsServiceImpl implements StatsService {
     public List<StatsDtoResponse> findStats(GetStatsRequest request) {
         JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
         QStats stats = QStats.stats;
+
+        if (request.getEnd().isBefore(request.getStart())) {
+            throw new BadRequestException("Дата старта не может быть больше даты финиша.");
+        }
 
         JPAQuery<StatsDtoResponse> query = queryFactory
                 .select(
