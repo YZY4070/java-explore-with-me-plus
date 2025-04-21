@@ -43,7 +43,6 @@ public class EventController {
 
         // Сохраняем информацию о просмотре для статистики
         eventServiceImpl.addHit(request);
-
         return eventService.getEvents(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size);
     }
 
