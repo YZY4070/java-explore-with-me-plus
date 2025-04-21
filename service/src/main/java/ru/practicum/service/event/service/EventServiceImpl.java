@@ -114,7 +114,7 @@ public class EventServiceImpl implements EventService {
 
         Map<Long, Long> viewStats = getViewStats(uris);
 
-        return events.stream()
+        return page.stream()
                 .map(e -> eventMapper.toEventShortDto(e, viewStats.getOrDefault(e.getId(), 0L)))
                 .collect(Collectors.toList());
     }
