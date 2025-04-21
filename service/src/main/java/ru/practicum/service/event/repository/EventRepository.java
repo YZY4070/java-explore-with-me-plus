@@ -37,9 +37,26 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             @Param("rangeEnd") LocalDateTime rangeEnd,
             Pageable pageable);
 
+//    @Query("SELECT e FROM Event e " +
+//            "WHERE e.state = 'PUBLISHED' " +
+//            "AND (:text IS NULL OR e.annotation ILIKE CONCAT('%', :text, '%') OR e.description ILIKE CONCAT('%', :text, '%')) " +
+//            "AND (:categories IS NULL OR e.category.id IN :categories) " +
+//            "AND (:paid IS NULL OR e.paid = :paid) " +
+//            "AND (CAST(:rangeStart AS timestamp) IS NULL OR e.eventDate >= :rangeStart) " +
+//            "AND (CAST(:rangeEnd AS timestamp) IS NULL OR e.eventDate <= :rangeEnd) " +
+//            "AND (:onlyAvailable = false OR (e.participantLimit = 0 OR e.confirmedRequests < e.participantLimit))")
+//    Page<Event> findAllPublic(
+//            @Param("text") String text,
+//            @Param("categories") Collection<Long> categories,
+//            @Param("paid") Boolean paid,
+//            @Param("rangeStart") LocalDateTime rangeStart,
+//            @Param("rangeEnd") LocalDateTime rangeEnd,
+//            @Param("onlyAvailable") Boolean onlyAvailable,
+//            Pageable pageable);
+
     @Query("SELECT e FROM Event e " +
             "WHERE e.state = 'PUBLISHED' " +
-            "AND (:text IS NULL OR (UPPER(e.annotation) LIKE UPPER(CONCAT('%', :text, '%')) OR UPPER(e.description) LIKE UPPER(CONCAT('%', :text, '%')))) " +
+            "AND (:text IS NULL OR e.annotation ILIKE :text OR e.description ILIKE :text) " +
             "AND (:categories IS NULL OR e.category.id IN :categories) " +
             "AND (:paid IS NULL OR e.paid = :paid) " +
             "AND (CAST(:rangeStart AS timestamp) IS NULL OR e.eventDate >= :rangeStart) " +

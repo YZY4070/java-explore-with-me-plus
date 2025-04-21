@@ -68,6 +68,7 @@ public class EventServiceImpl implements EventService {
         }
 
         // Получаем события из базы данных
+        //String fixedTextWithWildcards = '%' + text + '%'; //jpql плохо воспринимает CONCAT не поняли почему
         var events = eventRepository.findAllPublic(
                 text, categories, paid, rangeStart, rangeEnd, onlyAvailable, pageable);
 
