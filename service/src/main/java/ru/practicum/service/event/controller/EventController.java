@@ -47,6 +47,10 @@ public class EventController {
         return eventService.getEvents(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size);
     }
 
+
+
+
+
     @GetMapping("/{id}")
     public EventFullDto getEvent(@PathVariable Long id, HttpServletRequest request) {
         log.info("Получен запрос GET /events/{}", id);
