@@ -16,7 +16,6 @@ import ru.practicum.service.exception.ConflictException;
 import ru.practicum.service.exception.NotFoundException;
 
 import java.util.Collection;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -34,8 +33,6 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryResponseDto updateCategory(Long id, CategoryRequestDto categoryRequestDto) {
         Category category = categoryRepository.findById(id).orElseThrow(() -> new NotFoundException("Category not found: " + id));
-        Optional<Category> optionalCategory = categoryRepository.findByName(categoryRequestDto.getName());
-
         category.setName(categoryRequestDto.getName());
         return categoryMapper.toCategoryResponseDto(categoryRepository.save(category));
     }

@@ -6,11 +6,11 @@ import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
-import lombok.experimental.FieldNameConstants;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @Builder
-@FieldNameConstants(level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserDto {
     Long id;
 
