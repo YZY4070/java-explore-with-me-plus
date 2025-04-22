@@ -42,9 +42,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void deleteCategory(Long id) {
-       if (eventRepository.existsByCategoryId(id)){
-           throw new ConflictException("category in events" + id);
-       }
+        if (eventRepository.existsByCategoryId(id)) {
+            throw new ConflictException("category in events" + id);
+        }
         categoryRepository.deleteById(id);
     }
 
