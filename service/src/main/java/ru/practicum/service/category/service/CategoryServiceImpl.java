@@ -11,7 +11,6 @@ import ru.practicum.service.category.dto.CategoryResponseDto;
 import ru.practicum.service.category.mapper.CategoryMapper;
 import ru.practicum.service.category.model.Category;
 import ru.practicum.service.category.repository.CategoryRepository;
-import ru.practicum.service.exception.ConflictException;
 import ru.practicum.service.exception.NotFoundException;
 
 import java.util.Collection;
@@ -27,9 +26,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryResponseDto createCategory(CategoryRequestDto categoryRequestDto) {
-        if (categoryRepository.existsByName(categoryRequestDto.getName())) {
-            throw new ConflictException("Category already exists:" + categoryRequestDto.getName());
-        }
+//        if (categoryRepository.existsByName(categoryRequestDto.getName())) {
+//            throw new ConflictException("Category already exists:" + categoryRequestDto.getName());
+//        }
         return categoryMapper.toCategoryResponseDto(categoryRepository.save(categoryMapper.toCategory(categoryRequestDto)));
     }
 
@@ -37,9 +36,9 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryResponseDto updateCategory(Long id, CategoryRequestDto categoryRequestDto) {
         Category category = categoryRepository.findById(id).orElseThrow(() -> new NotFoundException("Category not found: " + id));
         Optional<Category> optionalCategory = categoryRepository.findByName(categoryRequestDto.getName());
-        if (optionalCategory.isPresent() && !optionalCategory.get().getId().equals(id)) {
-            throw new ConflictException("This name in categories already exist:" + categoryRequestDto.getName());
-        }
+//        if (optionalCategory.isPresent() && !optionalCategory.get().getId().equals(id)) {
+//            throw new ConflictException("This name in categories already exist:" + categoryRequestDto.getName());
+//        }
         category.setName(categoryRequestDto.getName());
         return categoryMapper.toCategoryResponseDto(categoryRepository.save(category));
     }

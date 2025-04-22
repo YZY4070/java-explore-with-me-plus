@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   ewm-db:
     image: postgres:16.1
@@ -27,16 +29,21 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/ewmdb
       - SPRING_DATASOURCE_USERNAME=mainDb
       - SPRING_DATASOURCE_PASSWORD=mainDb
+      - STATS_SERVER_URL=http://stats-server:9090
+      - SPRING_SQL_INIT_MODE=always
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=none
 
   stats-db:
     image: postgres:16.1
     container_name: stats-db
     ports:
-      - "5432:5432"
+      - "5433:5432"
     environment:
       - POSTGRES_DB=statsdb
       - POSTGRES_USER=statsDb
       - POSTGRES_PASSWORD=statsDb
+    volumes:
+      - ./stat/stats-server/src/main/resources/schema.sql:/docker-entrypoint-initdb.d/schema.sql
     healthcheck:
       test: pg_isready -q -d $$POSTGRES_DB -U $$POSTGRES_USER
       timeout: 5s
@@ -56,4 +63,3 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5432/statsdb
       - SPRING_DATASOURCE_USERNAME=statsDb
       - SPRING_DATASOURCE_PASSWORD=statsDb
-
