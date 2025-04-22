@@ -14,10 +14,9 @@ import java.time.LocalDateTime;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "requests", schema = "public")
-@EqualsAndHashCode(of = {"event", "requester"})
+@EqualsAndHashCode(of = "id")
 @Getter
 @Setter
-@ToString
 public class Request {
 
     @Id

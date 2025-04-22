@@ -50,9 +50,6 @@ public class CompilationServiceImpl implements CompilationService {
     public CompilationDto createCompilation(NewCompilationDto newCompilationDto) {
         Compilation compilation = compilationMapper.toCompilation(newCompilationDto);
 
-        // !!!
-        // Здесь необходимо заполнить поле views у event из статистики
-        // !!!
         if (newCompilationDto.getEvents() != null && !newCompilationDto.getEvents().isEmpty()) {
             Set<Event> events = eventRepository.findAllByIdIn(newCompilationDto.getEvents());
             compilation.setEvents(events);

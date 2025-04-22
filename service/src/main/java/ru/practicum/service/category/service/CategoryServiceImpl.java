@@ -11,6 +11,8 @@ import ru.practicum.service.category.dto.CategoryResponseDto;
 import ru.practicum.service.category.mapper.CategoryMapper;
 import ru.practicum.service.category.model.Category;
 import ru.practicum.service.category.repository.CategoryRepository;
+import ru.practicum.service.event.repository.EventRepository;
+import ru.practicum.service.exception.ConflictException;
 import ru.practicum.service.exception.NotFoundException;
 
 import java.util.Collection;
@@ -22,13 +24,10 @@ import java.util.Optional;
 public class CategoryServiceImpl implements CategoryService {
     final CategoryRepository categoryRepository;
     final CategoryMapper categoryMapper;
-    //EventRepository eventRepository
+    final EventRepository eventRepository;
 
     @Override
     public CategoryResponseDto createCategory(CategoryRequestDto categoryRequestDto) {
-//        if (categoryRepository.existsByName(categoryRequestDto.getName())) {
-//            throw new ConflictException("Category already exists:" + categoryRequestDto.getName());
-//        }
         return categoryMapper.toCategoryResponseDto(categoryRepository.save(categoryMapper.toCategory(categoryRequestDto)));
     }
 
@@ -36,18 +35,16 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryResponseDto updateCategory(Long id, CategoryRequestDto categoryRequestDto) {
         Category category = categoryRepository.findById(id).orElseThrow(() -> new NotFoundException("Category not found: " + id));
         Optional<Category> optionalCategory = categoryRepository.findByName(categoryRequestDto.getName());
-//        if (optionalCategory.isPresent() && !optionalCategory.get().getId().equals(id)) {
-//            throw new ConflictException("This name in categories already exist:" + categoryRequestDto.getName());
-//        }
+
         category.setName(categoryRequestDto.getName());
         return categoryMapper.toCategoryResponseDto(categoryRepository.save(category));
     }
 
     @Override
     public void deleteCategory(Long id) {
-//       if (eventRepository.existByCategoryId(id)){
-//           throw new ConflictException("category in events" + id);
-//       } ЭТОТ КОД НУЖЕН ДЛЯ ПРОВЕРКИ ЕСТЬ ЛИ В ИВЕНТАХ ТАКАЯ КАТЕГОРИЯ, ЕСЛИ ЕСТЬ ТО УДАЛЯТЬ НЕЛЬЗЯ НУЖНО БУДЕТ СНАЧАЛА ИЗМЕНИТЬ КАТЕГОРИИ В ИВЕНТАХ
+       if (eventRepository.existsByCategoryId(id)){
+           throw new ConflictException("category in events" + id);
+       }
         categoryRepository.deleteById(id);
     }
 

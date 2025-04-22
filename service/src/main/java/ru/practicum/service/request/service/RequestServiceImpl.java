@@ -14,6 +14,7 @@ import ru.practicum.service.request.RequestStatus;
 import ru.practicum.service.request.dto.EventRequestStatusUpdateRequest;
 import ru.practicum.service.request.dto.EventRequestStatusUpdateResult;
 import ru.practicum.service.request.dto.ParticipationRequestDto;
+import ru.practicum.service.request.dto.Status;
 import ru.practicum.service.request.mapper.RequestMapper;
 import ru.practicum.service.request.repository.RequestRepository;
 import ru.practicum.service.user.model.User;
@@ -161,7 +162,7 @@ public class RequestServiceImpl implements RequestService {
         }
 
         // Проверка: нельзя подтвердить заявку, если уже достигнут лимит по заявкам на данное событие
-        if (updateRequest.getStatus() == EventRequestStatusUpdateRequest.Status.CONFIRMED &&
+        if (updateRequest.getStatus() == Status.CONFIRMED &&
                 event.getConfirmedRequests() >= event.getParticipantLimit()) {
             throw new ConflictException("Достигнут лимит по заявкам на данное событие");
         }
@@ -185,7 +186,7 @@ public class RequestServiceImpl implements RequestService {
 
         // Обработка запросов
         for (Request request : requests) {
-            if (updateRequest.getStatus() == EventRequestStatusUpdateRequest.Status.CONFIRMED) {
+            if (updateRequest.getStatus() == Status.CONFIRMED) {
                 // Проверка: достигнут ли лимит заявок
                 if (event.getConfirmedRequests() >= event.getParticipantLimit()) {
                     request.setStatus(RequestStatus.REJECTED);

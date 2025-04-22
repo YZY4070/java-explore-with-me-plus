@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.practicum.service.category.dto.CategoryResponseDto;
 import ru.practicum.service.event.State;
 
 import java.time.LocalDateTime;
@@ -22,7 +23,7 @@ public class EventFullDto {
 
     private String description;
 
-    private CategoryDto category;
+    private CategoryResponseDto category;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime eventDate;

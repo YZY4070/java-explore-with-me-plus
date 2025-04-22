@@ -19,7 +19,6 @@ import java.util.Set;
 @Mapper(componentModel = "spring")
 public interface CompilationMapper {
 
-    //@Mapping(target = "events", ignore = true) // Игнорируем события, маппим их вручную
     CompilationDto toCompilationDto(Compilation compilation);
 
     @Mapping(target = "id", ignore = true)

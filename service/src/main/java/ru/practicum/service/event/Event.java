@@ -16,7 +16,6 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(of = "id")
 @Getter
 @Setter
-@ToString
 public class Event {
 
     @Id
@@ -62,7 +61,7 @@ public class Event {
     @JoinColumn(name = "initiator_id", nullable = false)
     User initiator;
 
-    @Column(nullable = false, length = 10)
+    @Column(nullable = false, length = 20)
     @Enumerated(EnumType.STRING)
     State state;
 

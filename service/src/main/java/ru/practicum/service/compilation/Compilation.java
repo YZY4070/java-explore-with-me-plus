@@ -20,7 +20,7 @@ public class Compilation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 50)
     String title;
 
     @Column(nullable = false)

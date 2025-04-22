@@ -17,9 +17,4 @@ public class EventRequestStatusUpdateRequest {
     private List<Long> requestIds;
     @NotNull
     private Status status;
-
-    public enum Status {
-        CONFIRMED,
-        REJECTED
-    }
 }
