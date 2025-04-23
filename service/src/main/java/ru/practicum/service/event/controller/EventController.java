@@ -7,8 +7,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.service.comments.service.CommentService;
 import ru.practicum.service.event.dto.EventFullDto;
 import ru.practicum.service.event.dto.EventShortDto;
+import ru.practicum.service.event.dto.EventWithCommentsDto;
 import ru.practicum.service.event.service.EventService;
 import ru.practicum.service.event.service.EventServiceImpl;
 
@@ -23,6 +25,7 @@ import java.util.List;
 public class EventController {
     private final EventService eventService;
     private final EventServiceImpl eventServiceImpl;
+    private final CommentService commentService;
 
     @GetMapping
     public Collection<EventShortDto> getEvents(
@@ -46,14 +49,16 @@ public class EventController {
         return eventService.getEvents(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size);
     }
 
-
     @GetMapping("/{id}")
     public EventFullDto getEvent(@PathVariable Long id, HttpServletRequest request) {
         log.info("Получен запрос GET /events/{}", id);
-
         // Сохраняем информацию о просмотре для статистики
         eventServiceImpl.addHit(request);
-
         return eventService.getEvent(id);
+    }
+
+    @GetMapping("/{eventId}")
+    public EventWithCommentsDto getEventWithComments(@PathVariable Long eventId) {
+        return commentService.getEventWithComments(eventId);
     }
 }
