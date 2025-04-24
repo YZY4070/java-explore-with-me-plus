@@ -12,7 +12,7 @@ import ru.practicum.service.comments.service.CommentService;
 @RequestMapping("/events/{eventId}/comments")
 @RequiredArgsConstructor
 public class CommentsPrivateController {
-    private CommentService commentService;
+    private final CommentService commentService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

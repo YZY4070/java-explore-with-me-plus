@@ -26,10 +26,10 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class CommentServiceImpl implements CommentService {
-    CommentRepository commentRepository;
-    UserRepository userRepository;
-    EventRepository eventRepository;
-    EventService eventService;
+    private final CommentRepository commentRepository;
+    private final UserRepository userRepository;
+    private final EventRepository eventRepository;
+    private final EventService eventService;
 
 
     public List<CommentDto> getCommentsAdmin(Integer size, Integer from) {

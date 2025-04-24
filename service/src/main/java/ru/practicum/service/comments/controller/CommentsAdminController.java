@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @RequestMapping("/admin/comments")
 public class CommentsAdminController {
-    CommentService commentService;
+    private final CommentService commentService;
 
     @GetMapping
     public List<CommentDto> getCommentsAdmin(@RequestParam Integer size, @RequestParam Integer from) {
