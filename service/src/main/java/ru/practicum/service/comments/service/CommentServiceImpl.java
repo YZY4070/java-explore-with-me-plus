@@ -82,7 +82,7 @@ public class CommentServiceImpl implements CommentService {
 
     public List<CommentDto> getCommentsByEventId(Long eventId, Integer from, Integer size) {
         eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException("Event not found: " + eventId));
-        Pageable pageable = PageRequest.of(from / size, size);
+        Pageable pageable = PageRequest.of(from / size, size, Sort.by("created").descending());
         Page<Comment> commentPage = commentRepository.findByEventId(eventId, pageable);
         return commentPage.getContent().stream()
                 .map(CommentMapper::toDto)
@@ -91,9 +91,8 @@ public class CommentServiceImpl implements CommentService {
 
     public EventWithCommentsDto getEventWithComments(Long eventId) {
         eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException("Event not found: " + eventId));
-        Pageable pageable = PageRequest.of(0, 3);
-        Sort sort = Sort.by(Sort.Direction.DESC, "created");
-        List<CommentDto> commentDtos = commentRepository.findByEventId(eventId, pageable, sort).stream()
+        Pageable pageable = PageRequest.of(0, 3, Sort.by("created").descending());
+        List<CommentDto> commentDtos = commentRepository.findByEventId(eventId, pageable).stream()
                 .map(CommentMapper::toDto)
                 .toList();
         return CommentMapper.toDto(eventService.getEvent(eventId), commentDtos);
